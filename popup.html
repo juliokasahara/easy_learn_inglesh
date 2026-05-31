@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EasyLearn English</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="app-logo">E</div>
+      <div>
+        <h1 class="app-title">EasyLearn English</h1>
+        <p class="app-subtitle">Tradutor instantâneo de inglês</p>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="history">📖 Histórico</button>
+      <button class="tab" data-tab="memory">🧠 Memory</button>
+      <button class="tab" data-tab="settings">⚙️ Config</button>
+    </nav>
+
+    <!-- Tab: Histórico -->
+    <section id="tab-history" class="tab-content active">
+      <div class="list-header">
+        <span class="list-count" id="history-count">0 palavras</span>
+        <button class="link-btn" id="clear-history">Limpar tudo</button>
+      </div>
+      <div class="word-list" id="history-list">
+        <div class="empty-state">
+          Nenhuma palavra traduzida ainda.<br />
+          Selecione texto em inglês em qualquer página!
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Memory (Repetição Espaçada) -->
+    <section id="tab-memory" class="tab-content">
+      <div class="list-header">
+        <span class="list-count" id="memory-count">0 frases</span>
+        <button class="link-btn" id="clear-memory">Limpar tudo</button>
+      </div>
+
+      <!-- Estado: sem frases -->
+      <div id="memory-empty" class="empty-state">
+        Nenhuma frase no Memory.<br />
+        Clique em 🧠 Memory no popup para salvar!
+      </div>
+
+      <!-- Flashcard -->
+      <div id="memory-card" class="memory-card" style="display:none">
+        <div class="card-progress" id="card-progress"></div>
+        <div class="card-lang-badge" id="card-lang"></div>
+        <div class="card-question" id="card-question"></div>
+        <div class="card-speak-row" id="card-speak-row-question" style="display:none">
+          <button class="card-speak-btn" id="card-speak-question">🔊 Ouvir</button>
+          <div class="card-speed-row">
+            <button class="card-speed-btn" data-speed="0.5">0.5×</button>
+            <button class="card-speed-btn" data-speed="0.75">0.75×</button>
+            <button class="card-speed-btn active" data-speed="1.0">1×</button>
+          </div>
+        </div>
+
+        <div class="card-reveal-area" id="card-reveal-area">
+          <button class="reveal-btn" id="reveal-btn">👁 Mostrar resposta</button>
+        </div>
+
+        <div class="card-answer-area" id="card-answer-area" style="display:none">
+          <div class="card-arrow">↓</div>
+          <div class="card-answer" id="card-answer"></div>
+          <div class="card-speak-row" id="card-speak-row-answer" style="display:none">
+            <button class="card-speak-btn" id="card-speak-answer">🔊 Ouvir</button>
+            <div class="card-speed-row">
+              <button class="card-speed-btn" data-speed="0.5">0.5×</button>
+              <button class="card-speed-btn" data-speed="0.75">0.75×</button>
+              <button class="card-speed-btn active" data-speed="1.0">1×</button>
+            </div>
+          </div>
+          <p class="rating-label">Quão bem você sabia?</p>
+          <div class="rating-buttons">
+            <button class="rating-btn very-hard" data-quality="1">😰 Muito difícil</button>
+            <button class="rating-btn hard" data-quality="2">😕 Difícil</button>
+            <button class="rating-btn easy" data-quality="3">🙂 Fácil</button>
+            <button class="rating-btn very-easy" data-quality="4">😄 Muito fácil</button>
+            <button class="rating-btn easy-peasy" data-quality="5">🚀 Easy Peasy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sessão concluída -->
+      <div id="memory-done" class="empty-state" style="display:none">
+        🎉 Revisões concluídas!<br />
+        <span id="memory-done-next" class="memory-next-review"></span>
+      </div>
+    </section>
+
+    <!-- Tab: Configurações -->
+    <section id="tab-settings" class="tab-content">
+      <div class="field">
+        <label class="field-label" for="api-preset">Servidor de tradução</label>
+        <select class="field-input" id="api-preset">
+          <option value="https://translate.argosopentech.com/translate">
+            ArgosOpenTech (gratuito)
+          </option>
+          <option value="https://libretranslate.de/translate">
+            LibreTranslate.de (gratuito)
+          </option>
+          <option value="https://libretranslate.com/translate">
+            LibreTranslate.com (requer API key)
+          </option>
+          <option value="custom">URL personalizada…</option>
+        </select>
+      </div>
+
+      <div class="field" id="custom-url-field" style="display:none">
+        <label class="field-label" for="custom-api-url">URL da API</label>
+        <input
+          class="field-input"
+          type="url"
+          id="custom-api-url"
+          placeholder="https://meu-servidor/translate"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="api-key">API Key <span class="optional">(opcional)</span></label>
+        <input
+          class="field-input"
+          type="password"
+          id="api-key"
+          placeholder="Deixe vazio para servidores gratuitos"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="theme">Tema do popup</label>
+        <select class="field-input" id="theme">
+          <option value="dark">🌙 Escuro</option>
+          <option value="light">☀️ Claro</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Velocidade padrão da fala</label>
+        <div class="speed-group">
+          <button class="speed-btn" data-speed="0.5">0.5×</button>
+          <button class="speed-btn active" data-speed="1.0">1×</button>
+          <button class="speed-btn" data-speed="1.5">1.5×</button>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="save-settings">💾 Salvar configurações</button>
+      <p class="save-status" id="save-status"></p>
+    </section>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
