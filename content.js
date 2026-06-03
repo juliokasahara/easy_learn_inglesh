@@ -7,9 +7,63 @@
 // CSS inline para o Shadow DOM (estilo isolado)
 // ─────────────────────────────────────────────
 const POPUP_CSS = `
-  :host {
-    /* Estilos críticos aplicados via JS inline — não definir position aqui */
-    display: block;
+  /* ── Temas ── */
+  :host,
+  :host([data-theme="espresso"]) {
+    --pop-bg:         #1e1b16;
+    --pop-border:     #3d3628;
+    --pop-header-bg:  rgba(0,0,0,0.20);
+    --pop-header-br:  rgba(255,255,255,0.07);
+    --pop-text:       #e8dfc8;
+    --pop-blue:       #7eb8d4;
+    --pop-green:      #8ec4a0;
+    --pop-red:        #d47a7a;
+    --pop-btn-bg:     rgba(255,255,255,0.08);
+    --pop-btn-hover:  rgba(255,255,255,0.16);
+    --pop-active-bg:  #c9a96e;
+    --pop-active-col: #1e1b16;
+    --pop-spinner:    rgba(255,255,255,0.15);
+    --pop-act-border: rgba(255,255,255,0.06);
+    --pop-shadow:     0 8px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
+    --pop-close-hov:  rgba(255,255,255,0.10);
+  }
+
+  :host([data-theme="forest"]) {
+    --pop-bg:         #0d1a11;
+    --pop-border:     #2a3d2b;
+    --pop-header-bg:  rgba(0,0,0,0.20);
+    --pop-header-br:  rgba(255,255,255,0.07);
+    --pop-text:       #cce8cc;
+    --pop-blue:       #6abcb4;
+    --pop-green:      #7ad490;
+    --pop-red:        #cc7070;
+    --pop-btn-bg:     rgba(255,255,255,0.08);
+    --pop-btn-hover:  rgba(255,255,255,0.16);
+    --pop-active-bg:  #5ab876;
+    --pop-active-col: #0d1a11;
+    --pop-spinner:    rgba(255,255,255,0.15);
+    --pop-act-border: rgba(255,255,255,0.06);
+    --pop-shadow:     0 8px 32px rgba(0,0,0,0.40), 0 2px 8px rgba(0,0,0,0.25);
+    --pop-close-hov:  rgba(255,255,255,0.10);
+  }
+
+  :host([data-theme="parchment"]) {
+    --pop-bg:         #f2e8d4;
+    --pop-border:     #c8b890;
+    --pop-header-bg:  #e6d8b8;
+    --pop-header-br:  #c8b890;
+    --pop-text:       #2c2010;
+    --pop-blue:       #2a5a8a;
+    --pop-green:      #2a6a3a;
+    --pop-red:        #8a2a2a;
+    --pop-btn-bg:     rgba(0,0,0,0.06);
+    --pop-btn-hover:  rgba(0,0,0,0.12);
+    --pop-active-bg:  #8b5e24;
+    --pop-active-col: #f2e8d4;
+    --pop-spinner:    rgba(0,0,0,0.15);
+    --pop-act-border: rgba(0,0,0,0.08);
+    --pop-shadow:     0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+    --pop-close-hov:  rgba(0,0,0,0.07);
   }
 
   *, *::before, *::after {
@@ -19,7 +73,6 @@ const POPUP_CSS = `
   }
 
   .popup {
-    /* position: fixed no :host; o .popup usa fluxo normal (sem absolute) */
     display: block;
     width: 288px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -27,20 +80,12 @@ const POPUP_CSS = `
     line-height: 1.5;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: var(--pop-shadow);
     animation: fadeIn 0.15s ease-out;
     transition: opacity 0.2s;
-    /* dark theme (default) */
-    background: #1e1e2e;
-    color: #cdd6f4;
-    border: 1px solid #313244;
-  }
-
-  .popup.light {
-    background: #ffffff;
-    color: #1e1e2e;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+    background: var(--pop-bg);
+    color: var(--pop-text);
+    border: 1px solid var(--pop-border);
   }
 
   @keyframes fadeIn {
@@ -54,12 +99,8 @@ const POPUP_CSS = `
     justify-content: space-between;
     align-items: center;
     padding: 7px 12px;
-    background: rgba(0,0,0,0.18);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  .popup.light .el-header {
-    background: #f3f4f6;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--pop-header-bg);
+    border-bottom: 1px solid var(--pop-header-br);
   }
   .el-title {
     font-size: 10px;
@@ -81,8 +122,7 @@ const POPUP_CSS = `
     border-radius: 4px;
     transition: opacity 0.12s, background 0.12s;
   }
-  .el-close:hover { opacity: 1; background: rgba(255,255,255,0.1); }
-  .popup.light .el-close:hover { background: rgba(0,0,0,0.07); }
+  .el-close:hover { opacity: 1; background: var(--pop-close-hov); }
 
   /* ── Body ── */
   .el-body { padding: 13px 16px 10px; }
@@ -90,10 +130,9 @@ const POPUP_CSS = `
   .el-original {
     font-size: 17px;
     font-weight: 600;
-    color: #89b4fa;
+    color: var(--pop-blue);
     word-break: break-word;
   }
-  .popup.light .el-original { color: #1a73e8; }
 
   .el-copy-label {
     display: inline-block;
@@ -102,8 +141,8 @@ const POPUP_CSS = `
     font-weight: 600;
     letter-spacing: 0.5px;
     border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--pop-border);
+    background: var(--pop-btn-bg);
     color: inherit;
     cursor: pointer;
     opacity: 0.65;
@@ -111,10 +150,6 @@ const POPUP_CSS = `
     transition: opacity 0.15s;
   }
   .el-copy-label:hover { opacity: 1; }
-  .popup.light .el-copy-label {
-    border-color: rgba(0,0,0,0.15);
-    background: rgba(0,0,0,0.05);
-  }
 
   .el-phonetic {
     font-size: 12px;
@@ -134,23 +169,21 @@ const POPUP_CSS = `
   .el-translated {
     font-size: 19px;
     font-weight: 700;
-    color: #a6e3a1;
+    color: var(--pop-green);
     word-break: break-word;
   }
-  .popup.light .el-translated { color: #2e7d32; }
 
   /* ── Actions ── */
   .el-actions {
     display: flex;
     gap: 5px;
     padding: 7px 11px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid var(--pop-act-border);
     flex-wrap: wrap;
   }
-  .popup.light .el-actions { border-top: 1px solid #f0f0f0; }
 
   .el-btn {
-    background: rgba(255,255,255,0.08);
+    background: var(--pop-btn-bg);
     border: none;
     cursor: pointer;
     font-size: 12px;
@@ -161,10 +194,8 @@ const POPUP_CSS = `
     transition: background 0.12s;
     white-space: nowrap;
   }
-  .popup.light .el-btn { background: #f0f0f0; color: #374151; }
-  .el-btn:hover { background: rgba(255,255,255,0.18); }
-  .popup.light .el-btn:hover { background: #e5e7eb; }
-  .el-btn.saved { color: #f9e2af; }
+  .el-btn:hover { background: var(--pop-btn-hover); }
+  .el-btn.saved { color: var(--pop-active-bg); }
 
   /* ── Speed bar ── */
   .el-speed-bar {
@@ -177,7 +208,7 @@ const POPUP_CSS = `
     color: inherit;
   }
   .el-speed-btn {
-    background: rgba(255,255,255,0.06);
+    background: var(--pop-btn-bg);
     border: none;
     cursor: pointer;
     font-size: 11px;
@@ -188,13 +219,12 @@ const POPUP_CSS = `
     transition: all 0.12s;
   }
   .el-speed-btn.active {
-    background: #89b4fa;
-    color: #1e1e2e;
+    background: var(--pop-active-bg);
+    color: var(--pop-active-col);
     font-weight: 700;
     opacity: 1;
   }
-  .popup.light .el-speed-btn.active { background: #1a73e8; color: #fff; }
-  .el-speed-btn:hover:not(.active) { background: rgba(255,255,255,0.15); opacity: 1; }
+  .el-speed-btn:hover:not(.active) { background: var(--pop-btn-hover); opacity: 1; }
 
   /* ── Loading ── */
   .el-loading {
@@ -209,22 +239,20 @@ const POPUP_CSS = `
   .el-spinner {
     width: 15px;
     height: 15px;
-    border: 2px solid rgba(255,255,255,0.15);
-    border-top-color: #89b4fa;
+    border: 2px solid var(--pop-spinner);
+    border-top-color: var(--pop-active-bg);
     border-radius: 50%;
     animation: spin 0.65s linear infinite;
     flex-shrink: 0;
   }
-  .popup.light .el-spinner { border-top-color: #1a73e8; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── Error ── */
   .el-error {
     padding: 13px 16px;
     font-size: 13px;
-    color: #f38ba8;
+    color: var(--pop-red);
   }
-  .popup.light .el-error { color: #b91c1c; }
 `;
 
 // ─────────────────────────────────────────────
@@ -302,7 +330,8 @@ function buildPopup() {
   if (old) old.remove();
 
   const div = document.createElement('div');
-  div.className = 'popup' + (config.theme === 'light' ? ' light' : '');
+  div.className = 'popup';
+  hostEl.dataset.theme = config.theme || 'espresso';
   shadowRoot.appendChild(div);
   popupInner = div;
   return div;
