@@ -117,6 +117,7 @@ let _memoryCards = [];
 let _dueCards    = [];
 let _cardIdx     = 0;
 let _memorySpeed = 1.0;
+let _memoryMode  = 'misto'; // 'misto' | 'en' | 'pt'
 
 function speakAt(text) {
   speechSynthesis.cancel();
@@ -125,6 +126,17 @@ function speakAt(text) {
   utt.rate = _memorySpeed;
   speechSynthesis.speak(utt);
 }
+
+// Botões de modo do Memory
+document.querySelectorAll('.memory-mode-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    _memoryMode = btn.dataset.mode;
+    document.querySelectorAll('.memory-mode-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    _cardIdx = 0;
+    renderMemoryCard();
+  });
+});
 
 // Botões de velocidade do flashcard (estáticos no HTML, listener registrado uma vez)
 document.querySelectorAll('.card-speed-btn').forEach((btn) => {
@@ -212,8 +224,11 @@ function renderMemoryCard() {
   if (_cardIdx >= _dueCards.length) _cardIdx = 0;
   const card = _dueCards[_cardIdx];
 
-  // Alterna aleatoriamente qual lado mostrar
-  const showPT   = Math.random() < 0.5;
+  // Determina qual lado mostrar conforme o modo
+  let showPT;
+  if (_memoryMode === 'pt') showPT = true;
+  else if (_memoryMode === 'en') showPT = false;
+  else showPT = Math.random() < 0.5; // misto
   const question = showPT ? card.translated : card.original;
   const answer   = showPT ? card.original   : card.translated;
   const label    = showPT ? 'PT → EN' : 'EN → PT';
